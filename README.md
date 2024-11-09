@@ -14,7 +14,7 @@ env\Scripts\activate
 
 ### 2) Clone repo & install packages
 ```bash
-git clone https://github.com/JoeWat2005/django-tailwind-website-template.git .
+git clone https://github.com/JoeWat2005/django-tailwind-website-template.git
 pip install -r requirements.txt
 ```
 
