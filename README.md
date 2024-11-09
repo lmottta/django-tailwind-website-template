@@ -1,11 +1,13 @@
 # Setup Instructions
 
+Assuming you are on Windows
+
 ## 1) Create project & start environment
 ```bash
-mkdir my-project
-cd my-project
-python -m venv env
-env\Scripts\activate
+mkdir <project-name>
+cd <project-name>
+python -m venv <environment-name>
+<environment-name>\Scripts\activate
 ```
 
 ## 2) Clone repo & install packages
