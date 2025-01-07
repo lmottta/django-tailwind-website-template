@@ -1,0 +1,41 @@
+{% load color_palette %}
+
+{% for option in post.poll_options.all %}
+<div class="flex items-center space-x-2 mb-3">
+    <button 
+        hx-post="{% url 'posts:vote_poll' option.id %}"
+        hx-target="#poll-{{ post.id }}"
+        hx-swap="innerHTML"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        class="w-full relative overflow-hidden group {% if user in option.votes.all %}bg-gradient-to-r from-teal-50/50 via-cyan-50/50 to-emerald-50/50 border-teal-200{% else %}bg-white hover:bg-gradient-to-r hover:from-teal-50/30 hover:via-cyan-50/30 hover:to-emerald-50/30 border-slate-200{% endif %} border rounded-lg p-3 transition-all duration-300"
+    >
+        <div class="relative z-10">
+            <div class="flex justify-between items-center mb-1">
+                <span class="font-medium {% if user in option.votes.all %}text-teal-700{% else %}text-slate-700{% endif %}">{{ option.text }}</span>
+                <span class="text-sm {% if user in option.votes.all %}text-teal-600{% else %}text-slate-500{% endif %}">
+                    {{ option.votes_count }} voto{{ option.votes_count|pluralize }}
+                </span>
+            </div>
+            
+            <!-- Barra de Progresso -->
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div 
+                    class="h-full transition-all duration-500 ease-out bg-gradient-to-r {% if user in option.votes.all %}from-teal-400 via-cyan-400 to-emerald-400{% else %}from-teal-300/70 via-cyan-300/70 to-emerald-300/70{% endif %}"
+                    style="width: {{ option.percentage }}%"
+                ></div>
+            </div>
+            
+            <!-- Porcentagem -->
+            <div class="text-xs mt-1 {% if user in option.votes.all %}text-teal-600{% else %}text-slate-500{% endif %}">
+                {{ option.percentage }}%
+            </div>
+        </div>
+        
+        <!-- Background de Progresso -->
+        <div 
+            class="absolute inset-0 transition-all duration-500 ease-out {% if user in option.votes.all %}bg-gradient-to-r from-teal-50/50 via-cyan-50/50 to-emerald-50/50 opacity-10{% else %}bg-gradient-to-r from-teal-50/30 via-cyan-50/30 to-emerald-50/30 opacity-5{% endif %}"
+            style="width: {{ option.percentage }}%"
+        ></div>
+    </button>
+</div>
+{% endfor %}

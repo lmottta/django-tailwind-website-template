@@ -1,0 +1,30 @@
+{% load color_palette %}
+
+<dialog id="post-modal" class="modal">
+    <div class="modal-box max-w-2xl bg-white">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 hover:bg-gradient-to-r hover:from-teal-50/50 hover:via-cyan-50/50 hover:to-emerald-50/50">✕</button>
+        </form>
+        
+        <h3 class="font-bold text-lg mb-4 text-teal-700">Criar Post</h3>
+        
+        <form method="post" action="{% url 'posts:create_post' %}" class="space-y-4">
+            {% csrf_token %}
+            <input type="hidden" name="post_type" value="regular">
+            
+            <div class="form-control">
+                <textarea name="content" rows="4" placeholder="No que você está pensando?" 
+                    class="textarea textarea-bordered w-full focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"></textarea>
+            </div>
+            
+            <div class="modal-action">
+                <button type="submit" class="btn bg-gradient-to-r from-teal-500 via-cyan-500 to-emerald-500 text-white hover:from-teal-600 hover:via-cyan-600 hover:to-emerald-600 border-none">
+                    Postar
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>

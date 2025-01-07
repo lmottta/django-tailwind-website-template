@@ -1,0 +1,102 @@
+{% load static %}
+{% load color_palette %}
+
+<div class="bg-white rounded-lg shadow-sm border">
+    <!-- Cabeçalho do Post -->
+    <div class="p-4">
+        <div class="flex items-center gap-3">
+            <div class="avatar">
+                <div class="w-10 h-10 rounded-full ring ring-1 {% get_palette_color post.user 'border' %} ring-offset-base-100 ring-offset-2">
+                    {% if post.user.profile_picture %}
+                        <img src="{{ post.user.profile_picture.url }}" alt="Profile">
+                    {% else %}
+                        <img src="{% static 'images/default_profile.png' %}" alt="Default Profile">
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                <p class="font-medium {% get_palette_color post.user 'text' %}">
+                    {{ post.user.get_full_name|default:post.user.username }}
+                </p>
+                <p class="text-sm text-base-content/60">{{ post.created_at|timesince }} atrás</p>
+            </div>
+        </div>
+
+        <!-- Conteúdo do Post -->
+        <div class="mt-4">
+            <p class="text-base-content">{{ post.content }}</p>
+            
+            {% if post.description %}
+                <p class="mt-2 text-base-content/70">{{ post.description }}</p>
+            {% endif %}
+        </div>
+
+        <!-- Imagens do Post -->
+        {% if post.post_images.all %}
+            <div class="mt-4 grid grid-cols-2 gap-2">
+                {% for image in post.post_images.all %}
+                    <div class="relative aspect-square">
+                        <img src="{{ image.image.url }}" alt="Post Image" class="w-full h-full object-cover rounded-lg">
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Enquete -->
+        {% if post.poll_options.all %}
+            <div class="mt-4" id="poll-{{ post.id }}">
+                {% include 'posts/poll_options.html' with post=post %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Ações do Post -->
+    <div class="px-4 pb-4">
+        <div class="flex justify-between items-center">
+            <div class="flex space-x-4">
+                <button onclick="likePost({{ post.id }})" class="btn btn-ghost btn-sm gap-2 hover:bg-base-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 {% if user in post.likes.all %}{% get_palette_color post.user 'text' %} fill-current{% else %}{% get_palette_color post.user 'text' %}/70{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    <span class="{% get_palette_color post.user 'text' %}/70">{{ post.likes.count }}</span>
+                </button>
+                <button onclick="toggleComments({{ post.id }})" class="btn btn-ghost btn-sm gap-2 hover:bg-base-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 {% get_palette_color post.user 'text' %}/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    <span class="{% get_palette_color post.user 'text' %}/70">{{ post.post_comments.count }}</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Seção de Comentários -->
+        <div class="mt-4 space-y-4">
+            <form method="post" action="{% url 'posts:comment_post' post.id %}" class="flex gap-2">
+                {% csrf_token %}
+                <input type="text" name="content" class="input input-bordered flex-grow bg-base-200 text-base-content placeholder-base-content/50" placeholder="Escreva um comentário...">
+                <button type="submit" class="btn btn-sm normal-case bg-gradient-to-r {% get_gradient post.user 'to-r' %} border-none text-white">Comentar</button>
+            </form>
+
+            {% with all_comments=post.post_comments.all|dictsortreversed:"created_at" %}
+            <div class="space-y-4">
+                {% if all_comments|length > 2 %}
+                    <button onclick="toggleMoreComments({{ post.id }})" class="btn btn-link btn-sm p-0 {% get_palette_color post.user 'text' %} hover:{% get_palette_color post.user 'text' %}/80" id="toggle-btn-{{ post.id }}">
+                        Ver mais comentários ({{ all_comments|length|add:"-2" }})
+                    </button>
+                    
+                    <div id="older-comments-{{ post.id }}" style="display: none">
+                        {% for comment in all_comments|slice:":-2" %}
+                            {% include "posts/comment.html" %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <!-- Dois últimos comentários -->
+                {% for comment in all_comments|slice:"-2:" %}
+                    {% include "posts/comment.html" %}
+                {% endfor %}
+            </div>
+            {% endwith %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Cadastro - SocialFit{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex bg-gradient-to-br from-emerald-400/90 via-teal-500/80 to-cyan-600/90">
+    <!-- Overlay com padrão de pontos -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.2)_1px,transparent_0)] [background-size:20px_20px] pointer-events-none"></div>
+    
+    <!-- Container Principal -->
+    <div class="relative z-10 w-full max-w-screen-xl mx-auto px-4 py-4 flex gap-8 items-start pt-8">
+        <!-- Lado Esquerdo - Mensagem de Boas-vindas -->
+        <div class="hidden lg:flex lg:w-1/2 flex-col text-white space-y-6">
+            <!-- Logo -->
+            <div class="flex justify-center mb-6">
+                <img src="{% static 'images/logo_.png' %}" alt="Logo" class="w-[200px] h-[200px] object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
+            </div>
+            
+            <h1 class="text-5xl font-bold leading-tight text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)] text-center">
+                Junte-se à maior comunidade fitness do Brasil
+            </h1>
+            <p class="text-xl text-white/90 drop-shadow-[0_1px_1px_rgba(0,0,0,0.3)] text-center">
+                Compartilhe suas conquistas, inspire outros e alcance seus objetivos.
+            </p>
+        </div>
+
+        <!-- Lado Direito - Formulário -->
+        <div class="w-full lg:w-1/2 max-w-md">
+            <div class="card bg-base-100/95 backdrop-blur-md shadow-2xl">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="flex justify-center">
+                        <img src="{% static 'images/logo_2.png' %}" alt="Logo" class="h-24 drop-shadow-lg">
+                    </div>
+
+                    <!-- Título -->
+                    <div class="text-center space-y-2 mb-6">
+                        <h2 class="text-2xl font-bold text-primary">Crie sua conta</h2>
+                        <p class="text-base-content/70">Comece sua jornada fitness hoje</p>
+                    </div>
+
+                    <!-- Formulário -->
+                    <form method="post" enctype="multipart/form-data" class="space-y-4">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        
+                        <!-- Botão de Cadastro -->
+                        <div class="form-control mt-6">
+                            <button type="submit" class="btn btn-primary w-full">Cadastrar</button>
+                        </div>
+                    </form>
+
+                    <!-- Divisor -->
+                    <div class="divider text-base-content/50 text-sm">ou continue com</div>
+
+                    <!-- Botões de Login Social -->
+                    <div class="space-y-3">
+                        <button class="btn btn-outline w-full">
+                            <img src="{% static 'images/google.svg' %}" alt="Google" class="w-5 h-5 mr-2">
+                            Continuar com Google
+                        </button>
+                        <button class="btn btn-outline w-full">
+                            <img src="{% static 'images/facebook.svg' %}" alt="Facebook" class="w-5 h-5 mr-2">
+                            Continuar com Facebook
+                        </button>
+                    </div>
+
+                    <!-- Link para Login -->
+                    <div class="text-center mt-6">
+                        <span class="text-base-content/70">Já tem uma conta?</span>
+                        <a href="{% url 'login' %}" class="link link-primary ml-1">Entrar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if workout %}Edit{% else %}Create{% endif %} Workout - Fitness Social{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h1 class="text-3xl font-bold mb-6">{% if workout %}Edit{% else %}Create{% endif %} Workout</h1>
+            
+            <form method="post" id="workoutForm">
+                {% csrf_token %}
+                
+                <!-- Basic Information -->
+                <div class="form-control w-full mb-4">
+                    <label class="label">
+                        <span class="label-text">Title</span>
+                    </label>
+                    <input type="text" name="title" class="input input-bordered w-full" 
+                           value="{{ workout.title|default:'' }}" required>
+                </div>
+
+                <div class="form-control w-full mb-4">
+                    <label class="label">
+                        <span class="label-text">Description</span>
+                    </label>
+                    <textarea name="description" class="textarea textarea-bordered h-24" required>{{ workout.description|default:'' }}</textarea>
+                </div>
+
+                <div class="form-control w-full mb-6">
+                    <label class="label cursor-pointer">
+                        <span class="label-text">Make this workout public</span>
+                        <input type="checkbox" name="is_public" class="toggle toggle-primary" 
+                               {% if workout.is_public|default:True %}checked{% endif %}>
+                    </label>
+                </div>
+
+                <!-- Exercises Section -->
+                <div class="divider">Exercises</div>
+                
+                <div id="exerciseList" class="space-y-4">
+                    {% if workout %}
+                        {% for exercise in workout.workoutexercise_set.all %}
+                            <div class="exercise-item card bg-base-200">
+                                <div class="card-body">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="form-control">
+                                            <label class="label">
+                                                <span class="label-text">Exercise</span>
+                                            </label>
+                                            <select name="exercises[]" class="select select-bordered w-full" required>
+                                                {% for ex in exercises %}
+                                                    <option value="{{ ex.id }}" {% if ex.id == exercise.exercise.id %}selected{% endif %}>
+                                                        {{ ex.name }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="grid grid-cols-3 gap-2">
+                                            <div class="form-control">
+                                                <label class="label">
+                                                    <span class="label-text">Sets</span>
+                                                </label>
+                                                <input type="number" name="sets[]" class="input input-bordered w-full" 
+                                                       value="{{ exercise.sets }}" min="1" required>
+                                            </div>
+                                            <div class="form-control">
+                                                <label class="label">
+                                                    <span class="label-text">Reps</span>
+                                                </label>
+                                                <input type="text" name="reps[]" class="input input-bordered w-full" 
+                                                       value="{{ exercise.reps }}" required>
+                                            </div>
+                                            <div class="form-control">
+                                                <label class="label">
+                                                    <span class="label-text">Rest (s)</span>
+                                                </label>
+                                                <input type="number" name="rest_times[]" class="input input-bordered w-full" 
+                                                       value="{{ exercise.rest_time }}" min="0" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-error btn-sm mt-2 remove-exercise">Remove Exercise</button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <button type="button" id="addExercise" class="btn btn-secondary mt-4">Add Exercise</button>
+
+                <div class="divider"></div>
+
+                <div class="card-actions justify-end mt-6">
+                    <a href="{% url 'workout_list' %}" class="btn btn-ghost">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        {% if workout %}Update{% else %}Create{% endif %} Workout
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const exerciseList = document.getElementById('exerciseList');
+    const addExerciseBtn = document.getElementById('addExercise');
+    
+    function createExerciseItem() {
+        const exerciseItem = document.createElement('div');
+        exerciseItem.className = 'exercise-item card bg-base-200';
+        exerciseItem.innerHTML = `
+            <div class="card-body">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Exercise</span>
+                        </label>
+                        <select name="exercises[]" class="select select-bordered w-full" required>
+                            {% for exercise in exercises %}
+                                <option value="{{ exercise.id }}">{{ exercise.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Sets</span>
+                            </label>
+                            <input type="number" name="sets[]" class="input input-bordered w-full" 
+                                   value="3" min="1" required>
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Reps</span>
+                            </label>
+                            <input type="text" name="reps[]" class="input input-bordered w-full" 
+                                   value="12" required>
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Rest (s)</span>
+                            </label>
+                            <input type="number" name="rest_times[]" class="input input-bordered w-full" 
+                                   value="60" min="0" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-error btn-sm mt-2 remove-exercise">Remove Exercise</button>
+            </div>
+        `;
+        return exerciseItem;
+    }
+    
+    addExerciseBtn.addEventListener('click', function() {
+        exerciseList.appendChild(createExerciseItem());
+    });
+    
+    exerciseList.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-exercise')) {
+            e.target.closest('.exercise-item').remove();
+        }
+    });
+    
+    // Add initial exercise if form is empty
+    if (exerciseList.children.length === 0) {
+        exerciseList.appendChild(createExerciseItem());
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

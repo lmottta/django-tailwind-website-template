@@ -1,0 +1,57 @@
+{% load color_palette %}
+
+<dialog id="image-modal" class="modal">
+    <div class="modal-box max-w-2xl bg-white">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 hover:bg-gradient-to-r hover:from-teal-50/50 hover:via-cyan-50/50 hover:to-emerald-50/50">✕</button>
+        </form>
+        
+        <h3 class="font-bold text-lg mb-4 text-teal-700">Compartilhar Imagens</h3>
+        
+        <form method="post" action="{% url 'posts:create_post' %}" class="space-y-4" id="image-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="post_type" value="image">
+            
+            <!-- Título do Post -->
+            <div class="form-control">
+                <input type="text" name="content" placeholder="Adicione um título ao seu post..." 
+                    class="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500">
+            </div>
+            
+            <!-- Descrição -->
+            <div class="form-control">
+                <textarea name="description" placeholder="Adicione uma descrição..." 
+                    class="textarea textarea-bordered min-h-[100px] focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500"></textarea>
+            </div>
+            
+            <!-- Upload de Imagens -->
+            <div class="form-control">
+                <label class="w-full cursor-pointer">
+                    <input type="file" name="images" multiple accept="image/*" class="hidden" onchange="handleImageSelect(event)">
+                    <div class="border-2 border-dashed border-slate-300 rounded-lg p-8 text-center hover:border-teal-500 hover:bg-gradient-to-r hover:from-teal-50/10 hover:via-cyan-50/10 hover:to-emerald-50/10 transition-all">
+                        <div class="flex flex-col items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <p class="text-teal-700">Clique para selecionar imagens ou arraste e solte aqui</p>
+                            <p class="text-sm text-teal-600">PNG, JPG, GIF até 10MB</p>
+                        </div>
+                    </div>
+                </label>
+            </div>
+            
+            <!-- Preview de Imagens -->
+            <div id="image-preview" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+            
+            <!-- Botão Postar -->
+            <div class="modal-action">
+                <button type="submit" class="btn bg-gradient-to-r from-teal-500 via-cyan-500 to-emerald-500 text-white hover:from-teal-600 hover:via-cyan-600 hover:to-emerald-600 border-none">
+                    Postar Imagens
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>

@@ -1,0 +1,182 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-06 10:18-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+# Auth messages
+msgid "Please enter a correct %(username)s and password."
+msgstr "Por favor, insira um %(username)s e senha corretos."
+
+msgid "This account is inactive."
+msgstr "Esta conta está inativa."
+
+msgid "Your password has been changed successfully!"
+msgstr "Sua senha foi alterada com sucesso!"
+
+msgid "Password reset link has been sent to your email address."
+msgstr "O link para redefinição de senha foi enviado para seu e-mail."
+
+msgid "Please check your email to complete the registration."
+msgstr "Por favor, verifique seu e-mail para completar o registro."
+
+msgid "Email or Password is incorrect"
+msgstr "E-mail ou senha incorretos"
+
+# Form labels
+msgid "Username"
+msgstr "Nome de usuário"
+
+msgid "Password"
+msgstr "Senha"
+
+msgid "Password confirmation"
+msgstr "Confirmação de senha"
+
+msgid "Email address"
+msgstr "Endereço de e-mail"
+
+msgid "First name"
+msgstr "Nome"
+
+msgid "Last name"
+msgstr "Sobrenome"
+
+msgid "Profile picture"
+msgstr "Foto de perfil"
+
+msgid "Bio"
+msgstr "Biografia"
+
+msgid "Birth date"
+msgstr "Data de nascimento"
+
+msgid "Fitness goals"
+msgstr "Objetivos fitness"
+
+# Form error messages
+msgid "This field is required."
+msgstr "Este campo é obrigatório."
+
+msgid "Enter a valid email address."
+msgstr "Digite um endereço de e-mail válido."
+
+msgid "This username is already taken."
+msgstr "Este nome de usuário já está em uso."
+
+msgid "This email address is already registered."
+msgstr "Este endereço de e-mail já está registrado."
+
+msgid "The two password fields didn't match."
+msgstr "As duas senhas não conferem."
+
+msgid "Your password must contain at least 8 characters."
+msgstr "Sua senha deve conter pelo menos 8 caracteres."
+
+# Success messages
+msgid "Your profile has been updated successfully!"
+msgstr "Seu perfil foi atualizado com sucesso!"
+
+msgid "Your settings have been saved successfully!"
+msgstr "Suas configurações foram salvas com sucesso!"
+
+msgid "Your workout has been created successfully!"
+msgstr "Seu treino foi criado com sucesso!"
+
+msgid "Your workout has been updated successfully!"
+msgstr "Seu treino foi atualizado com sucesso!"
+
+msgid "Your workout has been deleted successfully!"
+msgstr "Seu treino foi excluído com sucesso!"
+
+msgid "Your post has been created successfully!"
+msgstr "Sua publicação foi criada com sucesso!"
+
+msgid "Your post has been updated successfully!"
+msgstr "Sua publicação foi atualizada com sucesso!"
+
+msgid "Your post has been deleted successfully!"
+msgstr "Sua publicação foi excluída com sucesso!"
+
+msgid "You are now following %(username)s!"
+msgstr "Agora você está seguindo %(username)s!"
+
+msgid "You have unfollowed %(username)s."
+msgstr "Você deixou de seguir %(username)s."
+
+# Error messages
+msgid "Something went wrong. Please try again."
+msgstr "Algo deu errado. Por favor, tente novamente."
+
+msgid "You don't have permission to perform this action."
+msgstr "Você não tem permissão para realizar esta ação."
+
+msgid "This content is not available."
+msgstr "Este conteúdo não está disponível."
+
+msgid "You must be logged in to perform this action."
+msgstr "Você precisa estar logado para realizar esta ação."
+
+# Notification messages
+msgid "%(username)s started following you!"
+msgstr "%(username)s começou a te seguir!"
+
+msgid "%(username)s liked your post!"
+msgstr "%(username)s curtiu sua publicação!"
+
+msgid "%(username)s commented on your post!"
+msgstr "%(username)s comentou em sua publicação!"
+
+msgid "%(username)s mentioned you in a comment!"
+msgstr "%(username)s mencionou você em um comentário!"
+
+msgid "Your workout is scheduled to start in %(time)s minutes!"
+msgstr "Seu treino está programado para começar em %(time)s minutos!"
+
+# Time-related messages
+msgid "just now"
+msgstr "agora mesmo"
+
+msgid "%(count)s minute ago"
+msgid_plural "%(count)s minutes ago"
+msgstr[0] "há %(count)s minuto"
+msgstr[1] "há %(count)s minutos"
+
+msgid "%(count)s hour ago"
+msgid_plural "%(count)s hours ago"
+msgstr[0] "há %(count)s hora"
+msgstr[1] "há %(count)s horas"
+
+msgid "%(count)s day ago"
+msgid_plural "%(count)s days ago"
+msgstr[0] "há %(count)s dia"
+msgstr[1] "há %(count)s dias"
+
+msgid "%(count)s week ago"
+msgid_plural "%(count)s weeks ago"
+msgstr[0] "há %(count)s semana"
+msgstr[1] "há %(count)s semanas"
+
+msgid "%(count)s month ago"
+msgid_plural "%(count)s months ago"
+msgstr[0] "há %(count)s mês"
+msgstr[1] "há %(count)s meses"
+
+msgid "%(count)s year ago"
+msgid_plural "%(count)s years ago"
+msgstr[0] "há %(count)s ano"
+msgstr[1] "há %(count)s anos"

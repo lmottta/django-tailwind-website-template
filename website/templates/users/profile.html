@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Profile - {{ user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Profile Info -->
+    <div class="md:col-span-1">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <div class="avatar">
+                    <div class="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 mx-auto">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="profile" />
+                        {% else %}
+                            <img src="{% static 'images/default-avatar.png' %}" alt="default profile" />
+                        {% endif %}
+                    </div>
+                </div>
+                <h2 class="card-title justify-center mt-4">{{ user.get_full_name }}</h2>
+                <p class="text-center text-base-content/70">{{ user.bio }}</p>
+                <div class="stats shadow mt-4">
+                    <div class="stat place-items-center">
+                        <div class="stat-title">Following</div>
+                        <div class="stat-value">{{ user.following.count }}</div>
+                    </div>
+                    <div class="stat place-items-center">
+                        <div class="stat-title">Followers</div>
+                        <div class="stat-value">{{ user.followers.count }}</div>
+                    </div>
+                </div>
+                {% if anamnesis %}
+                    <div class="divider">Fitness Info</div>
+                    <div class="stats stats-vertical shadow">
+                        <div class="stat">
+                            <div class="stat-title">Weight</div>
+                            <div class="stat-value text-lg">{{ anamnesis.weight }} kg</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-title">Height</div>
+                            <div class="stat-value text-lg">{{ anamnesis.height }} m</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-title">Activity Level</div>
+                            <div class="stat-value text-lg">{{ anamnesis.get_activity_level_display }}</div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a href="{% url 'anamnesis_edit' %}" class="btn btn-outline btn-primary btn-sm w-full">Update Fitness Info</a>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mt-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>Complete your fitness profile!</span>
+                        <a href="{% url 'anamnesis_create' %}" class="btn btn-primary btn-sm">Start Now</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Edit Form -->
+    <div class="md:col-span-2">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">Edit Profile</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="card-actions justify-end mt-6">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Achievements Section -->
+        <div class="card bg-base-100 shadow-xl mt-6">
+            <div class="card-body">
+                <h2 class="card-title">Achievements</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                    {% for achievement in user.userachievement_set.all %}
+                        <div class="card bg-base-200">
+                            <div class="card-body items-center text-center p-4">
+                                <div class="avatar">
+                                    <div class="w-16 rounded-full">
+                                        <img src="{{ achievement.achievement.icon.url }}" alt="{{ achievement.achievement.name }}" />
+                                    </div>
+                                </div>
+                                <h3 class="card-title text-sm mt-2">{{ achievement.achievement.name }}</h3>
+                                <p class="text-xs">{{ achievement.achievement.description }}</p>
+                                <p class="text-xs text-base-content/70">Earned {{ achievement.earned_at|date }}</p>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-span-full text-center py-4">
+                            <p>No achievements yet. Keep working out to earn some!</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

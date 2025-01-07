@@ -1,0 +1,63 @@
+{% load color_palette %}
+
+<dialog id="poll-modal" class="modal">
+    <div class="modal-box max-w-2xl bg-white">
+        <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 hover:bg-gradient-to-r hover:from-teal-50/50 hover:via-cyan-50/50 hover:to-emerald-50/50">✕</button>
+        </form>
+        
+        <h3 class="font-bold text-lg mb-4 text-teal-700">Criar Enquete</h3>
+        
+        <form method="post" action="{% url 'posts:create_post' %}" class="space-y-4" id="poll-form">
+            {% csrf_token %}
+            <input type="hidden" name="post_type" value="poll">
+            
+            <!-- Título da Enquete -->
+            <div class="form-control">
+                <input type="text" name="content" placeholder="Qual é sua pergunta?" 
+                    class="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500">
+            </div>
+            
+            <!-- Opções da Enquete -->
+            <div id="poll-options" class="space-y-2">
+                <div class="flex items-center gap-2">
+                    <input type="text" name="poll_options[]" placeholder="Opção 1" 
+                        class="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500">
+                    <button type="button" onclick="removePollOption(this)" class="btn btn-ghost btn-circle btn-sm hover:bg-gradient-to-r hover:from-teal-50/50 hover:via-cyan-50/50 hover:to-emerald-50/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-600" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <input type="text" name="poll_options[]" placeholder="Opção 2" 
+                        class="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500">
+                    <button type="button" onclick="removePollOption(this)" class="btn btn-ghost btn-circle btn-sm hover:bg-gradient-to-r hover:from-teal-50/50 hover:via-cyan-50/50 hover:to-emerald-50/50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-600" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Botão Adicionar Opção -->
+            <button type="button" onclick="addPollOption()" 
+                class="btn btn-ghost btn-sm text-teal-600 hover:text-teal-700 gap-2 hover:bg-gradient-to-r hover:from-teal-50/50 hover:via-cyan-50/50 hover:to-emerald-50/50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+                Adicionar opção
+            </button>
+            
+            <!-- Botão Postar -->
+            <div class="modal-action">
+                <button type="submit" class="btn bg-gradient-to-r from-teal-500 via-cyan-500 to-emerald-500 text-white hover:from-teal-600 hover:via-cyan-600 hover:to-emerald-600 border-none">
+                    Postar Enquete
+                </button>
+            </div>
+        </form>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>

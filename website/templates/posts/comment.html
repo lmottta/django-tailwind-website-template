@@ -1,0 +1,27 @@
+{% load static %}
+
+<div class="flex gap-4">
+    <div class="avatar">
+        <div class="w-8 h-8 rounded-full">
+            {% if comment.user.profile_picture %}
+                <img src="{{ comment.user.profile_picture.url }}" alt="Profile">
+            {% else %}
+                <img src="{% static 'images/default_profile.png' %}" alt="Default Profile">
+            {% endif %}
+        </div>
+    </div>
+    <div class="flex-grow">
+        <div class="bg-base-200 rounded-lg p-3">
+            <p class="font-bold text-base-content">{{ comment.user.get_full_name }}</p>
+            <p class="text-base-content/80">{{ comment.content }}</p>
+        </div>
+        <div class="flex items-center space-x-4 mt-1">
+            <button onclick="likeComment({{ comment.id }})" class="text-sm text-base-content/70 hover:text-primary">
+                <span id="comment-like-{{ comment.id }}">
+                    {% if user in comment.likes.all %}Descurtir{% else %}Curtir{% endif %} ({{ comment.likes.count }})
+                </span>
+            </button>
+            <span class="text-sm text-base-content/70">{{ comment.created_at|timesince }} atrás</span>
+        </div>
+    </div>
+</div>
