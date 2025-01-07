@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Privacidade - SocialFit{% endblock %}
+
+{% block authenticated_content %}
+<div class="max-w-4xl mx-auto">
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title text-2xl mb-6">Configurações de Privacidade</h2>
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Configurações de Privacidade -->
+                <div class="space-y-4">
+                    <!-- Perfil Privado -->
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-lg">
+                        <div>
+                            <h3 class="font-medium">Perfil Privado</h3>
+                            <p class="text-sm opacity-75">Apenas seguidores aprovados podem ver seu perfil</p>
+                        </div>
+                        {{ form.private_profile }}
+                    </div>
+                    
+                    <!-- Estatísticas de Treino -->
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-lg">
+                        <div>
+                            <h3 class="font-medium">Mostrar Estatísticas de Treino</h3>
+                            <p class="text-sm opacity-75">Permitir que outros usuários vejam suas estatísticas de treino</p>
+                        </div>
+                        {{ form.show_workout_stats }}
+                    </div>
+                    
+                    <!-- Autenticação de Dois Fatores -->
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-lg">
+                        <div>
+                            <h3 class="font-medium">Autenticação de Dois Fatores</h3>
+                            <p class="text-sm opacity-75">Adiciona uma camada extra de segurança à sua conta</p>
+                        </div>
+                        {{ form.two_factor_auth }}
+                    </div>
+                </div>
+                
+                <div class="card-actions justify-end">
+                    <button type="submit" class="btn btn-primary">
+                        Salvar Configurações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

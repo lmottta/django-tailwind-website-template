@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load color_palette %}
+
+{% block authenticated_content %}
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Criar Post -->
+    <div class="mb-6">
+        <div class="bg-white shadow-md rounded-lg p-4">
+            <div class="flex items-center space-x-4 mb-4">
+                <div class="avatar">
+                    <div class="w-12 h-12 rounded-full ring ring-1 {% get_palette_color user 'border' %} ring-offset-base-100 ring-offset-2">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}">
+                        {% else %}
+                            <img src="{% static 'images/default_profile.png' %}" alt="Default Profile">
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex-grow">
+                    <div class="flex space-x-4">
+                        <button onclick="openModal('image-modal')" class="btn btn-ghost btn-sm {% get_palette_color user 'text' %} hover:{% get_palette_color user 'text' %}/80 gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Imagem
+                        </button>
+                        <button onclick="openModal('poll-modal')" class="btn btn-ghost btn-sm {% get_palette_color user 'text' %} hover:{% get_palette_color user 'text' %}/80 gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Enquete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Posts -->
+    <div class="space-y-6">
+        {% for post in posts %}
+            <div class="bg-white shadow-md rounded-lg p-4">
+                <!-- Cabeçalho do Post -->
+                <div class="flex items-center mb-4">
+                    <div class="avatar mr-4">
+                        <div class="w-10 h-10 rounded-full ring ring-1 {% get_palette_color post.user 'border' %} ring-offset-base-100 ring-offset-2">
+                            {% if post.user.profile_picture %}
+                                <img src="{{ post.user.profile_picture.url }}" alt="{{ post.user.username }}">
+                            {% else %}
+                                <img src="{% static 'images/default_profile.png' %}" alt="Default Profile">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold {% get_palette_color post.user 'text' %}">
+                            {{ post.user.get_full_name|default:post.user.username }}
+                        </h3>
+                        <p class="text-xs text-base-content/60">{{ post.created_at|timesince }} atrás</p>
+                    </div>
+                </div>
+
+                <!-- Conteúdo do Post -->
+                {% if post.content %}
+                    <p class="mb-4">{{ post.content }}</p>
+                {% endif %}
+
+                <!-- Imagens do Post -->
+                {% if post.post_images.all %}
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                        {% for image in post.post_images.all %}
+                            <img src="{{ image.image.url }}" alt="Post Image" class="w-full h-48 object-cover rounded-lg">
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Enquete -->
+                {% if post.post_type == 'poll' %}
+                    <div id="poll-{{ post.id }}">
+                        {% include 'posts/poll_options.html' %}
+                    </div>
+                {% endif %}
+
+                <!-- Ações do Post -->
+                <div class="flex justify-between items-center mt-4 pt-4 border-t">
+                    <!-- Curtir -->
+                    <button onclick="likePost({{ post.id }})" 
+                        class="btn btn-ghost btn-sm gap-2 {% if user in post.likes.all %}{% get_palette_color post.user 'text' %}{% else %}hover:{% get_palette_color post.user 'text' %}{% endif %}"
+                        id="like-button-{{ post.id }}"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="{% if user in post.likes.all %}currentColor{% else %}none{% endif %}" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                        <span id="like-count-{{ post.id }}">{{ post.likes.count }}</span>
+                    </button>
+
+                    <!-- Comentar -->
+                    <button onclick="toggleComments({{ post.id }})" 
+                        class="btn btn-ghost btn-sm gap-2 hover:{% get_palette_color post.user 'text' %}"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <span>{{ post.post_comments.count }}</span>
+                    </button>
+                </div>
+
+                <!-- Seção de Comentários -->
+                <div id="comments-section-{{ post.id }}" class="mt-4 hidden">
+                    <!-- Form de Comentário -->
+                    <form method="post" action="{% url 'posts:comment_post' post.id %}" class="flex gap-2 mb-4">
+                        {% csrf_token %}
+                        <input type="text" name="content" placeholder="Escreva um comentário..." 
+                            class="input input-bordered w-full focus:outline-none focus:border-teal-500">
+                        <button type="submit" 
+                            class="btn bg-gradient-to-r {% get_gradient post.user 'to-r' %} border-none text-white hover:brightness-110">
+                            Comentar
+                        </button>
+                    </form>
+
+                    <!-- Lista de Comentários -->
+                    <div class="space-y-4">
+                        {% for comment in post.post_comments.all %}
+                            <div class="flex items-start gap-3">
+                                <div class="avatar">
+                                    <div class="w-8 h-8 rounded-full ring ring-1 {% get_palette_color comment.user 'border' %} ring-offset-base-100 ring-offset-2">
+                                        {% if comment.user.profile_picture %}
+                                            <img src="{{ comment.user.profile_picture.url }}" alt="Profile">
+                                        {% else %}
+                                            <img src="{% static 'images/default_profile.png' %}" alt="Default Profile">
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="bg-base-200 rounded-lg p-3">
+                                        <p class="font-medium {% get_palette_color comment.user 'text' %}">
+                                            {{ comment.user.get_full_name|default:comment.user.username }}
+                                        </p>
+                                        <p class="text-sm">{{ comment.content }}</p>
+                                    </div>
+                                    <div class="text-xs text-base-content/60 mt-1">
+                                        {{ comment.created_at|timesince }} atrás
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="text-center text-base-content/70 py-8">
+                <p>Nenhum post encontrado. Comece a postar!</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% include 'posts/modals/image_modal.html' %}
+{% include 'posts/modals/poll_modal.html' %}
+{% endblock %}

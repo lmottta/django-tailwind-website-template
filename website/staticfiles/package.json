@@ -1,0 +1,9 @@
+{
+  "name": "fitness-social",
+  "version": "1.0.0",
+  "description": "Fitness Social Network Platform",
+  "dependencies": {
+    "daisyui": "^4.4.19",
+    "tailwindcss": "^3.3.5"
+  }
+}

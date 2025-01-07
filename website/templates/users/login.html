@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - SocialFit{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-400/90 via-teal-500/80 to-cyan-600/90">
+    <!-- Overlay com padrão de pontos -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.2)_1px,transparent_0)] [background-size:20px_20px] pointer-events-none"></div>
+    
+    <!-- Card de Login -->
+    <div class="relative z-10 w-full max-w-screen-xl mx-auto px-4 py-8 flex gap-8 items-center">
+        <!-- Lado Esquerdo - Mensagem de Boas-vindas -->
+        <div class="hidden lg:flex lg:w-1/2 flex-col text-white space-y-6">
+            <!-- Logo -->
+            <div class="flex justify-center mb-6">
+                <img src="{% static 'images/logo_.png' %}" alt="Logo" class="w-[200px] h-[200px] object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
+            </div>
+            
+            <h1 class="text-5xl font-bold leading-tight text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)] text-center">
+                Transforme seus objetivos em conquistas
+            </h1>
+            <p class="text-xl text-white/90 drop-shadow-[0_1px_1px_rgba(0,0,0,0.3)] text-center">
+                Junte-se à comunidade fitness mais engajada. Compartilhe suas conquistas, inspire outros e alcance seus objetivos.
+            </p>
+            <div class="flex gap-4 mt-4 justify-center">
+                <div class="stat bg-white/10 backdrop-blur-md rounded-box">
+                    <div class="stat-title text-white/80">Usuários Ativos</div>
+                    <div class="stat-value text-white">10K+</div>
+                </div>
+                <div class="stat bg-white/10 backdrop-blur-md rounded-box">
+                    <div class="stat-title text-white/80">Posts Diários</div>
+                    <div class="stat-value text-white">5K+</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lado Direito - Formulário -->
+        <div class="w-full lg:w-1/2 max-w-md">
+            <div class="card bg-base-100/95 backdrop-blur-md shadow-2xl">
+                <div class="card-body">
+                    <!-- Logo -->
+                    <div class="flex justify-center">
+                        <img src="{% static 'images/logo_2.png' %}" alt="Logo" class="h-24 drop-shadow-lg">
+                    </div>
+
+                    <!-- Título -->
+                    <div class="text-center space-y-2 mb-6">
+                        <h2 class="text-2xl font-bold text-primary">Bem-vindo de volta!</h2>
+                        <p class="text-base-content/70">Entre na sua conta para continuar</p>
+                    </div>
+
+                    <!-- Formulário -->
+                    <form method="post" class="space-y-4">
+                        {% csrf_token %}
+                        
+                        <!-- Email -->
+                        <div class="form-control">
+                            <div class="relative">
+                                <input type="email" 
+                                       name="username" 
+                                       placeholder="Email"
+                                       class="input input-bordered w-full pl-10 bg-base-200/50" 
+                                       required>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Senha -->
+                        <div class="form-control">
+                            <div class="relative">
+                                <input type="password" 
+                                       name="password" 
+                                       placeholder="Senha"
+                                       class="input input-bordered w-full pl-10 bg-base-200/50" 
+                                       required>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            </div>
+                            <label class="label">
+                                <a href="{% url 'password_reset' %}" class="label-text-alt link link-primary">Esqueceu sua senha?</a>
+                            </label>
+                        </div>
+
+                        <!-- Lembrar-me -->
+                        <div class="form-control">
+                            <label class="cursor-pointer label justify-start gap-3">
+                                <input type="checkbox" name="remember" class="checkbox checkbox-primary checkbox-sm">
+                                <span class="label-text">Lembrar-me</span>
+                            </label>
+                        </div>
+
+                        <!-- Botão de Login -->
+                        <button type="submit" class="btn btn-primary w-full">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                            </svg>
+                            Entrar
+                        </button>
+                    </form>
+
+                    <!-- Divisor -->
+                    <div class="divider text-base-content/50 text-sm">ou continue com</div>
+
+                    <!-- Botões de Login Social -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="btn btn-outline gap-2 hover:btn-primary">
+                            <img src="{% static 'images/google.svg' %}" alt="Google" class="w-5 h-5">
+                            Google
+                        </button>
+                        <button class="btn btn-outline gap-2 hover:btn-primary">
+                            <img src="{% static 'images/facebook.svg' %}" alt="Facebook" class="w-5 h-5">
+                            Facebook
+                        </button>
+                    </div>
+
+                    <!-- Link para Registro -->
+                    <div class="text-center mt-6">
+                        <p class="text-base-content/70">
+                            Não tem uma conta?
+                            <a href="{% url 'register' %}" class="link link-primary font-semibold ml-1">Cadastre-se</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stat {
+        @apply px-6 py-4 text-white;
+    }
+    .stat-title {
+        @apply text-white/80;
+    }
+    .stat-value {
+        @apply text-white;
+    }
+    .input:focus {
+        @apply bg-base-200/70;
+    }
+    
+    /* Animação suave do gradiente */
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    .bg-gradient-to-br {
+        background-size: 200% 200%;
+        animation: gradient 15s ease infinite;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,41 @@
+:root {
+    /* Paleta de cores principal */
+    --color-rich-green: #004D40;
+    --color-dark-green: #00695C;
+    --color-bangladesh-green: #00796B;
+    --color-mountain-meadow: #009688;
+    --color-caribbean-green: #00BFA5;
+    --color-white: #FFFFFF;
+
+    /* Variações para elementos específicos */
+    --color-primary: var(--color-bangladesh-green);
+    --color-primary-dark: var(--color-rich-green);
+    --color-primary-light: var(--color-caribbean-green);
+    --color-secondary: var(--color-mountain-meadow);
+    --color-background: var(--color-white);
+    --color-surface: var(--color-white);
+    
+    /* Texto */
+    --color-text-primary: var(--color-rich-green);
+    --color-text-secondary: var(--color-dark-green);
+    --color-text-light: var(--color-white);
+}
+
+/* Classes de utilidade */
+.bg-primary { background-color: var(--color-primary); }
+.bg-primary-dark { background-color: var(--color-primary-dark); }
+.bg-primary-light { background-color: var(--color-primary-light); }
+.bg-secondary { background-color: var(--color-secondary); }
+
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-light { color: var(--color-text-light); }
+
+/* Gradientes */
+.gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+}
+
+.gradient-secondary {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+} 

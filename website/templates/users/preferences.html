@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Preferências - SocialFit{% endblock %}
+
+{% block authenticated_content %}
+<div class="max-w-4xl mx-auto">
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title text-2xl mb-6">Preferências</h2>
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Paleta de Cores -->
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Paleta de Cores</span>
+                    </label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {% for value, name in form.fields.color_palette.choices %}
+                        <label class="flex items-center gap-3 p-4 rounded-lg border cursor-pointer hover:bg-base-200 transition-colors {% if user.color_palette == value %}border-primary{% endif %}">
+                            <input type="radio" name="color_palette" value="{{ value }}" class="radio radio-primary" {% if user.color_palette == value %}checked{% endif %}>
+                            <div>
+                                <div class="font-medium">{{ name }}</div>
+                                <div class="flex gap-1 mt-1">
+                                    {% if value == 'default' %}
+                                        <div class="w-4 h-4 rounded-full bg-primary"></div>
+                                        <div class="w-4 h-4 rounded-full bg-secondary"></div>
+                                        <div class="w-4 h-4 rounded-full bg-accent"></div>
+                                    {% elif value == 'nature' %}
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #2E7D32"></div>
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #388E3C"></div>
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #43A047"></div>
+                                    {% elif value == 'sunset' %}
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #FF5722"></div>
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #FF7043"></div>
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #FF8A65"></div>
+                                    {% elif value == 'ocean' %}
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #0277BD"></div>
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #0288D1"></div>
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #039BE5"></div>
+                                    {% elif value == 'berry' %}
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #C2185B"></div>
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #D81B60"></div>
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #E91E63"></div>
+                                    {% elif value == 'monochrome' %}
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #212121"></div>
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #424242"></div>
+                                        <div class="w-4 h-4 rounded-full" style="background-color: #616161"></div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="card-actions justify-end">
+                    <button type="submit" class="btn btn-primary">
+                        Salvar Preferências
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

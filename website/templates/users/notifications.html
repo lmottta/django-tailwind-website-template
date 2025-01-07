@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Notificações - SocialFit{% endblock %}
+
+{% block authenticated_content %}
+<div class="max-w-4xl mx-auto">
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title text-2xl mb-6">Configurações de Notificações</h2>
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Configurações de Notificações -->
+                <div class="space-y-4">
+                    <!-- Notificações por E-mail -->
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-lg">
+                        <div>
+                            <h3 class="font-medium">Notificações por E-mail</h3>
+                            <p class="text-sm opacity-75">Receber notificações importantes por e-mail</p>
+                        </div>
+                        {{ form.email_notifications }}
+                    </div>
+                    
+                    <!-- Notificações de Seguidores -->
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-lg">
+                        <div>
+                            <h3 class="font-medium">Notificações de Seguidores</h3>
+                            <p class="text-sm opacity-75">Ser notificado quando alguém começar a te seguir</p>
+                        </div>
+                        {{ form.follower_notifications }}
+                    </div>
+                    
+                    <!-- Notificações de Treinos -->
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-lg">
+                        <div>
+                            <h3 class="font-medium">Notificações de Treinos</h3>
+                            <p class="text-sm opacity-75">Receber lembretes e atualizações sobre seus treinos</p>
+                        </div>
+                        {{ form.workout_notifications }}
+                    </div>
+                    
+                    <!-- Notificações de Login -->
+                    <div class="flex items-center justify-between p-4 bg-base-200 rounded-lg">
+                        <div>
+                            <h3 class="font-medium">Notificações de Login</h3>
+                            <p class="text-sm opacity-75">Ser notificado sobre novos acessos à sua conta</p>
+                        </div>
+                        {{ form.login_notifications }}
+                    </div>
+                </div>
+                
+                <div class="card-actions justify-end">
+                    <button type="submit" class="btn btn-primary">
+                        Salvar Configurações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

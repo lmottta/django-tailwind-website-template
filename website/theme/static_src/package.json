@@ -4,11 +4,13 @@
   "description": "",
   "scripts": {
     "start": "npm run dev",
-    "build": "npm run build:clean && npm run build:tailwind",
-    "build:clean": "rimraf ../static/css/dist",
-    "build:tailwind": "cross-env NODE_ENV=production tailwindcss --postcss -i ./src/styles.css -o ../static/css/dist/styles.css --minify",
-    "dev": "cross-env NODE_ENV=development tailwindcss --postcss -i ./src/styles.css -o ../static/css/dist/styles.css -w",
-    "tailwindcss": "node ./node_modules/tailwindcss/lib/cli.js"
+    "build": "npm run build:clean && npm run build:sass && npm run build:postcss",
+    "build:clean": "rimraf ../static/css",
+    "build:sass": "sass --style=compressed src/styles.scss ../static/css/dist/styles.css",
+    "build:postcss": "postcss ../static/css/dist/styles.css -o ../static/css/dist/styles.css",
+    "dev": "concurrently npm:watch:*",
+    "watch:sass": "sass --watch src/styles.scss ../static/css/dist/styles.css",
+    "watch:postcss": "postcss ../static/css/dist/styles.css -o ../static/css/dist/styles.css --watch"
   },
   "keywords": [],
   "author": "",
@@ -17,12 +19,15 @@
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.10",
-    "cross-env": "^7.0.3",
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.2",
+    "daisyui": "^4.4.19",
     "postcss": "^8.4.32",
+    "postcss-cli": "^11.0.0",
     "postcss-import": "^15.1.0",
     "postcss-nested": "^6.0.1",
-    "postcss-simple-vars": "^7.0.1",
     "rimraf": "^5.0.5",
-    "tailwindcss": "^3.4.0"
+    "sass": "^1.69.5",
+    "tailwindcss": "^3.3.6"
   }
 }

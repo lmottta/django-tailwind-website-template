@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Workouts - Fitness Social{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Workouts</h1>
+        {% if user.user_type == 'trainer' %}
+            <a href="{% url 'workout_create' %}" class="btn btn-primary">Create Workout</a>
+        {% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for workout in workouts %}
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="avatar">
+                            <div class="w-12 rounded-full">
+                                {% if workout.creator.profile_picture %}
+                                    <img src="{{ workout.creator.profile_picture.url }}" alt="{{ workout.creator.get_full_name }}" />
+                                {% else %}
+                                    <img src="{% static 'images/default-avatar.png' %}" alt="default profile" />
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">{{ workout.creator.get_full_name }}</h3>
+                            <p class="text-sm text-base-content/70">{{ workout.created_at|timesince }} ago</p>
+                        </div>
+                    </div>
+
+                    <h2 class="card-title">{{ workout.title }}</h2>
+                    <p class="text-base-content/70">{{ workout.description|truncatewords:30 }}</p>
+                    
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        {% for exercise in workout.workoutexercise_set.all|slice:":3" %}
+                            <div class="badge badge-primary">{{ exercise.exercise.name }}</div>
+                        {% endfor %}
+                        {% if workout.workoutexercise_set.count > 3 %}
+                            <div class="badge badge-ghost">+{{ workout.workoutexercise_set.count|add:"-3" }} more</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-actions justify-between items-center mt-6">
+                        <div class="flex items-center space-x-2">
+                            <div class="badge badge-outline">
+                                {{ workout.workoutexercise_set.count }} exercises
+                            </div>
+                            {% if workout.is_public %}
+                                <div class="badge badge-secondary">Public</div>
+                            {% else %}
+                                <div class="badge">Private</div>
+                            {% endif %}
+                        </div>
+                        <a href="{% url 'workout_detail' workout.pk %}" class="btn btn-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-span-full">
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body text-center">
+                        <h2 class="card-title justify-center">No workouts found</h2>
+                        <p>{% if user.user_type == 'trainer' %}Create your first workout!{% else %}Follow some trainers to see their workouts.{% endif %}</p>
+                        {% if user.user_type == 'trainer' %}
+                            <div class="card-actions justify-center mt-4">
+                                <a href="{% url 'workout_create' %}" class="btn btn-primary">Create Workout</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
