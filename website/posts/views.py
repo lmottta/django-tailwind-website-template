@@ -10,6 +10,8 @@ from .models import Post, Comment, PollOption, PostImage
 from fitness.models import Workout, Achievement, UserAchievement
 from users.models import UserFollowing
 from django.views.decorators.http import require_POST
+import logging
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -194,19 +196,36 @@ def delete_comment(request, comment_id):
 
 @login_required
 def vote_poll(request, option_id):
-    option = get_object_or_404(PollOption, id=option_id)
-    voted = option.toggle_vote(request.user)
+    try:
+        option = get_object_or_404(PollOption, id=option_id)
+        
+        logger.error(f"Vote attempt - User: {request.user}, Option: {option.text}")
+        logger.error(f"Request method: {request.method}")
+        
+        if request.method != 'POST':
+            logger.error("Not a POST request")
+            return JsonResponse({'error': 'Método inválido'}, status=405)
+        
+        # Realiza o toggle do voto
+        voted = option.toggle_vote(request.user)
+        
+        # Recupera os dados atualizados das opções
+        poll_options = option.post.poll_options.all()
+        options_data = [{
+            'id': opt.id,
+            'text': opt.text,
+            'votes_count': opt.votes_count,
+            'percentage': opt.percentage,
+            'voted': request.user in opt.votes.all()
+        } for opt in poll_options]
+        
+        logger.error(f"Vote result - Voted: {voted}, Options: {options_data}")
+        
+        return JsonResponse({
+            'voted': voted,
+            'options': options_data
+        })
     
-    # Retorna os dados atualizados de todas as opções da enquete
-    poll_options = option.post.poll_options.all()
-    options_data = [{
-        'id': opt.id,
-        'votes_count': opt.votes_count,
-        'percentage': opt.percentage,
-        'voted': request.user in opt.votes.all()
-    } for opt in poll_options]
-    
-    return JsonResponse({
-        'voted': voted,
-        'options': options_data
-    })
+    except Exception as e:
+        logger.error(f"Error in vote_poll: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=500)

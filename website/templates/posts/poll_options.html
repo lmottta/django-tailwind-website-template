@@ -1,48 +1,73 @@
 {% load color_palette %}
 
 {% for option in post.poll_options.all %}
-<div class="flex items-center space-x-2 mb-3">
+<div class="flex items-center space-x-2 mb-3" id="poll-option-{{ option.id }}">
     <button 
         hx-post="{% url 'posts:vote_poll' option.id %}"
         hx-target="#poll-{{ post.id }}"
-        hx-swap="innerHTML"
+        hx-swap="outerHTML"
         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        class="w-full relative overflow-hidden group hover:bg-slate-50 {% if user in option.votes.all %}bg-gradient-to-r from-teal-50/50 via-cyan-50/50 to-emerald-50/50{% else %}bg-white{% endif %} border {% if user in option.votes.all %}border-teal-200{% else %}border-slate-200{% endif %} rounded-lg p-4 transition-all duration-300"
+        hx-indicator="#poll-loading-{{ post.id }}"
+        hx-trigger="click"
+        class="w-full relative group rounded-lg p-4 transition-all duration-300 poll-option"
+        {% if user in option.votes.all %}data-voted="true"{% endif %}
     >
-        <!-- Conteúdo Principal -->
-        <div class="relative z-10">
-            <!-- Texto e Contagem -->
-            <div class="flex justify-between items-center mb-2">
-                <span class="font-medium {% if user in option.votes.all %}text-teal-700{% else %}text-slate-700{% endif %}">
-                    {{ option.text }}
-                </span>
-                <div class="flex items-center gap-2">
-                    <span class="text-sm {% if user in option.votes.all %}text-teal-600{% else %}text-slate-500{% endif %}">
-                        {{ option.votes_count }} voto{{ option.votes_count|pluralize }}
-                    </span>
-                    {% if user in option.votes.all %}
-                        <span class="text-xs px-2 py-1 rounded-full bg-gradient-to-r from-teal-100 to-emerald-100 text-teal-700">Seu voto</span>
-                    {% endif %}
+        <div class="flex justify-between items-center mb-2">
+            <span class="font-medium poll-option__text-primary">
+                {{ option.text }}
+            </span>
+            <span class="text-sm poll-option__text-secondary">
+                {{ option.votes_count }} voto{{ option.votes_count|pluralize }}
+            </span>
+        </div>
+        
+        <div class="w-full">
+            <div class="relative">
+                <div class="cursor-pointer">
+                    <div class="w-full h-2 poll-option__bg-light rounded-full overflow-hidden">
+                        <div 
+                            class="h-full poll-option__bg-main transition-all duration-500 ease-out"
+                            style="width: {{ option.percentage }}%; transform: skewX(-10deg);"
+                        ></div>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Container da Barra de Progresso -->
-            <div class="relative pt-5">
-                <!-- Porcentagem -->
-                <div class="absolute left-0 -top-1 text-xs font-medium {% if user in option.votes.all %}text-teal-600{% else %}text-slate-500{% endif %}">
-                    {{ option.percentage }}%
-                </div>
-                
-                <!-- Barra de Progresso Base -->
-                <div class="w-full h-2 rounded-full overflow-hidden bg-slate-100">
-                    <!-- Barra de Progresso Preenchida -->
-                    <div 
-                        class="h-full transition-all duration-500 ease-out bg-gradient-to-r {% if user in option.votes.all %}from-teal-400 via-cyan-400 to-emerald-400{% else %}from-teal-300/70 via-cyan-300/70 to-emerald-300/70{% endif %}"
-                        style="width: {{ option.percentage }}%"
-                    ></div>
+                <div class="absolute left-0 -top-4 text-xs poll-option__text-secondary">
+                    {{ option.percentage|floatformat:1 }}%
                 </div>
             </div>
         </div>
+
+        {% if user in option.votes.all %}
+            <span class="absolute top-2 right-2 text-xs px-2 py-1 rounded-full poll-option__bg-main text-white">
+                Seu voto
+            </span>
+        {% endif %}
     </button>
 </div>
 {% endfor %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/polls.css' %}">
+
+<div id="poll-{{ post.id }}" class="w-full">
+    {% include "posts/poll_options.html" %}
+</div>
+
+<div id="poll-loading-{{ post.id }}" class="fixed inset-0 bg-black/10 z-50 flex items-center justify-center hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg flex items-center space-x-3">
+        <div class="w-4 h-4 bg-teal-500 rounded-full animate-bounce"></div>
+        <div class="w-4 h-4 bg-teal-500 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+        <div class="w-4 h-4 bg-teal-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Configuração simplificada do HTMX
+    htmx.on('htmx:afterSwap', function(evt) {
+        if (evt.detail.target.id.startsWith('poll-')) {
+            htmx.process(evt.detail.target);
+        }
+    });
+});
+</script>

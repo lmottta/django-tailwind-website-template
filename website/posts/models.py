@@ -115,15 +115,31 @@ class PollOption(models.Model):
         return 0
 
     def toggle_vote(self, user):
-        if user in self.votes.all():
-            self.votes.remove(user)
-            return False
-        else:
-            # Remove voto de outras opções da mesma enquete
-            for option in self.post.poll_options.all():
-                option.votes.remove(user)
-            self.votes.add(user)
-            return True
+        # Log para depuração
+        print(f"Toggle vote - User: {user}, Option: {self.text}")
+        print(f"Current votes: {list(self.votes.all())}")
+        
+        # Verifica se o usuário já votou em alguma opção desta enquete
+        existing_vote = self.post.poll_options.filter(votes=user).first()
+        
+        # Log adicional
+        print(f"Existing vote: {existing_vote}")
+        
+        if existing_vote:
+            # Se já votou na mesma opção, remove o voto
+            if existing_vote == self:
+                self.votes.remove(user)
+                print("Removing vote from same option")
+                return False
+            else:
+                # Remove o voto da opção anterior
+                existing_vote.votes.remove(user)
+                print(f"Removing vote from option: {existing_vote.text}")
+        
+        # Adiciona o voto na opção atual
+        self.votes.add(user)
+        print(f"Adding vote to option: {self.text}")
+        return True
 
 class PostImage(TimestampedModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')

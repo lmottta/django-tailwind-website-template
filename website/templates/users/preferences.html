@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
 
 {% block title %}Preferências - SocialFit{% endblock %}
 
@@ -7,62 +7,99 @@
 <div class="max-w-4xl mx-auto">
     <div class="card bg-base-100 shadow-xl">
         <div class="card-body">
-            <h2 class="card-title text-2xl mb-6">Preferências</h2>
+            <h2 class="card-title text-2xl mb-6 text-base">Preferências</h2>
             
             <form method="post" class="space-y-6">
                 {% csrf_token %}
                 
                 <!-- Paleta de Cores -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Paleta de Cores</span>
-                    </label>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        {% for value, name in form.fields.color_palette.choices %}
-                        <label class="flex items-center gap-3 p-4 rounded-lg border cursor-pointer hover:bg-base-200 transition-colors {% if user.color_palette == value %}border-primary{% endif %}">
-                            <input type="radio" name="color_palette" value="{{ value }}" class="radio radio-primary" {% if user.color_palette == value %}checked{% endif %}>
-                            <div>
-                                <div class="font-medium">{{ name }}</div>
-                                <div class="flex gap-1 mt-1">
-                                    {% if value == 'default' %}
-                                        <div class="w-4 h-4 rounded-full bg-primary"></div>
-                                        <div class="w-4 h-4 rounded-full bg-secondary"></div>
-                                        <div class="w-4 h-4 rounded-full bg-accent"></div>
-                                    {% elif value == 'nature' %}
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #2E7D32"></div>
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #388E3C"></div>
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #43A047"></div>
-                                    {% elif value == 'sunset' %}
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #FF5722"></div>
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #FF7043"></div>
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #FF8A65"></div>
-                                    {% elif value == 'ocean' %}
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #0277BD"></div>
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #0288D1"></div>
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #039BE5"></div>
-                                    {% elif value == 'berry' %}
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #C2185B"></div>
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #D81B60"></div>
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #E91E63"></div>
-                                    {% elif value == 'monochrome' %}
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #212121"></div>
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #424242"></div>
-                                        <div class="w-4 h-4 rounded-full" style="background-color: #616161"></div>
-                                    {% endif %}
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-base">Paleta de Cores</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {% for value, label in user.COLOR_PALETTES %}
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="color_palette" value="{{ value }}" 
+                                   class="peer sr-only" {% if user.color_palette == value %}checked{% endif %}>
+                            <div class="theme-option p-4 rounded-lg {% if user.color_palette == value %}active{% endif %}">
+                                <div class="flex items-center gap-3">
+                                    <div data-theme="{{ value }}" class="w-8 h-8 rounded-full gradient-bg"></div>
+                                    <span class="font-medium text-base">{{ label }}</span>
+                                </div>
+                                <!-- Preview das cores -->
+                                <div class="color-preview" data-theme="{{ value }}">
+                                    <div class="bg-primary" title="Cor Primária"></div>
+                                    <div class="bg-secondary" title="Cor Secundária"></div>
+                                    <div class="bg-accent" title="Cor de Destaque"></div>
                                 </div>
                             </div>
                         </label>
                         {% endfor %}
                     </div>
                 </div>
-                
-                <div class="card-actions justify-end">
-                    <button type="submit" class="btn btn-primary">
-                        Salvar Preferências
-                    </button>
+
+                <!-- Notificações -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-base">Notificações</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3">
+                            <input type="checkbox" name="email_notifications" 
+                                   class="checkbox checkbox-primary"
+                                   {% if user.email_notifications %}checked{% endif %}>
+                            <span class="text-base">Receber notificações por e-mail</span>
+                        </label>
+                        <label class="flex items-center gap-3">
+                            <input type="checkbox" name="push_notifications" 
+                                   class="checkbox checkbox-primary"
+                                   {% if user.push_notifications %}checked{% endif %}>
+                            <span class="text-base">Receber notificações push</span>
+                        </label>
+                    </div>
+                    <p class="text-muted text-sm">Escolha como deseja receber suas notificações</p>
+                </div>
+
+                <!-- Privacidade -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-base">Privacidade</h3>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-3">
+                            <input type="checkbox" name="account_privacy" 
+                                   class="checkbox checkbox-primary"
+                                   {% if user.account_privacy %}checked{% endif %}>
+                            <span class="text-base">Conta privada (apenas seguidores podem ver seus posts)</span>
+                        </label>
+                    </div>
+                    <p class="text-muted text-sm">Configure a visibilidade do seu perfil e conteúdo</p>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const themeOptions = document.querySelectorAll('input[name="color_palette"]');
+    
+    themeOptions.forEach(option => {
+        option.addEventListener('change', function() {
+            // Remove 'active' class from all theme options
+            document.querySelectorAll('.theme-option').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Add 'active' class to the selected theme option
+            const selectedThemeOption = this.closest('label').querySelector('.theme-option');
+            selectedThemeOption.classList.add('active');
+            
+            // Optional: Immediate theme change without saving (if you want)
+            document.documentElement.setAttribute('data-theme', this.value);
+        });
+    });
+});
+</script>
+{% endblock %}

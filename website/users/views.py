@@ -45,7 +45,7 @@ def register(request):
             # Especificando o backend de autenticação
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, 'Registro realizado com sucesso!')
-            return redirect('anamnesis_create')
+            return redirect('users:anamnesis_create')
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
@@ -285,17 +285,17 @@ def profile_edit(request):
 @login_required
 def preferences(request):
     if request.method == 'POST':
-        form = UserPreferencesForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Preferências atualizadas com sucesso!')
-            return redirect('users:preferences')
-    else:
-        form = UserPreferencesForm(instance=request.user)
+        user = request.user
+        user.color_palette = request.POST.get('color_palette', 'default')
+        user.email_notifications = request.POST.get('email_notifications') == 'on'
+        user.push_notifications = request.POST.get('push_notifications') == 'on'
+        user.account_privacy = request.POST.get('account_privacy') == 'on'
+        user.save()
+        
+        messages.success(request, 'Preferências atualizadas com sucesso!')
+        return redirect('users:preferences')
     
-    return render(request, 'users/preferences.html', {
-        'form': form
-    })
+    return render(request, 'users/preferences.html')
 
 @login_required
 def privacy(request):
