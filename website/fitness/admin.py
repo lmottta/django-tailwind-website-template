@@ -1,4 +1,5 @@
 from django.contrib import admin
+<<<<<<< HEAD
 from .models import Exercise, Workout, WorkoutExercise, FitnessPost, Achievement, UserAchievement
 
 @admin.register(Exercise)
@@ -36,3 +37,7 @@ class UserAchievementAdmin(admin.ModelAdmin):
     list_display = ('user', 'achievement', 'created_at')
     list_filter = ('created_at',)
     search_fields = ('user__username', 'achievement__name')
+=======
+
+# Register your models here.
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f

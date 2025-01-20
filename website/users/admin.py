@@ -1,4 +1,5 @@
 from django.contrib import admin
+<<<<<<< HEAD
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, Anamnesis, UserFollowing, UserBlock, Post, PostImage, Comment
 
@@ -42,3 +43,7 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ('user', 'post', 'content', 'created_at')
     search_fields = ('user__email', 'content')
     list_filter = ('created_at',)
+=======
+
+# Register your models here.
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f

@@ -1,12 +1,17 @@
 from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
+<<<<<<< HEAD
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from core.models import TimestampedModel, LikeableModel, ContentModel
 from posts.models import Post as BasePost
 
 class Exercise(TimestampedModel):
+=======
+
+class Exercise(models.Model):
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
     MUSCLE_GROUP_CHOICES = [
         ('chest', 'Peito'),
         ('back', 'Costas'),
@@ -32,6 +37,11 @@ class Exercise(TimestampedModel):
     equipment = models.CharField('Equipamento', max_length=20, choices=EQUIPMENT_CHOICES)
     image = models.ImageField('Imagem', upload_to='exercises/', blank=True, null=True)
     video_url = models.URLField('URL do Vídeo', blank=True, null=True)
+<<<<<<< HEAD
+=======
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    updated_at = models.DateTimeField('Atualizado em', auto_now=True)
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
 
     class Meta:
         verbose_name = 'Exercício'
@@ -39,6 +49,7 @@ class Exercise(TimestampedModel):
         ordering = ['name']
 
     def __str__(self):
+<<<<<<< HEAD
         return str(self.name)
 
     def clean(self):
@@ -46,6 +57,11 @@ class Exercise(TimestampedModel):
             raise ValidationError('A descrição do exercício é obrigatória.')
 
 class Workout(TimestampedModel, LikeableModel):
+=======
+        return self.name
+
+class Workout(models.Model):
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
     title = models.CharField('Título', max_length=100)
     description = models.TextField('Descrição')
     creator = models.ForeignKey(
@@ -54,12 +70,25 @@ class Workout(TimestampedModel, LikeableModel):
         related_name='created_workouts',
         verbose_name='Criador'
     )
+<<<<<<< HEAD
     exercises = models.ManyToManyField(
         Exercise,
         through='WorkoutExercise',
         verbose_name='Exercícios'
     )
     is_public = models.BooleanField('Público', default=True)
+=======
+    exercises = models.ManyToManyField(Exercise, through='WorkoutExercise')
+    is_public = models.BooleanField('Público', default=True)
+    likes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='liked_workouts',
+        blank=True,
+        verbose_name='Curtidas'
+    )
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    updated_at = models.DateTimeField('Atualizado em', auto_now=True)
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
     slug = models.SlugField(unique=True, max_length=100)
 
     class Meta:
@@ -68,17 +97,22 @@ class Workout(TimestampedModel, LikeableModel):
         ordering = ['-created_at']
 
     def __str__(self):
+<<<<<<< HEAD
         return str(self.title)
 
     def clean(self):
         if not self.description:
             raise ValidationError('A descrição do treino é obrigatória.')
+=======
+        return self.title
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
+<<<<<<< HEAD
     def toggle_like(self, user):
         if user in self.likes.all():
             self.likes.remove(user)
@@ -115,6 +149,13 @@ class WorkoutExercise(models.Model):
     )
     sets = models.PositiveIntegerField('Séries')
     reps = models.CharField('Repetições', max_length=50)
+=======
+class WorkoutExercise(models.Model):
+    workout = models.ForeignKey(Workout, on_delete=models.CASCADE)
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
+    sets = models.PositiveIntegerField('Séries')
+    reps = models.CharField('Repetições', max_length=50)  # Permite formatos como "8-12" ou "Até falha"
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
     rest_time = models.PositiveIntegerField('Tempo de Descanso (segundos)')
     order = models.PositiveIntegerField('Ordem', default=0)
 
@@ -127,6 +168,7 @@ class WorkoutExercise(models.Model):
     def __str__(self):
         return f"{self.exercise.name} - {self.sets}x{self.reps}"
 
+<<<<<<< HEAD
     def clean(self):
         if self.sets < 1:
             raise ValidationError('O número de séries deve ser maior que zero.')
@@ -138,6 +180,17 @@ class FitnessPost(BasePost):
     Extensão do modelo Post base para posts específicos de fitness,
     adicionando relacionamento com workouts
     """
+=======
+class Post(models.Model):
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='posts',
+        verbose_name='Autor'
+    )
+    content = models.TextField('Conteúdo')
+    image = models.ImageField('Imagem', upload_to='posts/', blank=True, null=True)
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
     workout = models.ForeignKey(
         Workout,
         on_delete=models.SET_NULL,
@@ -146,10 +199,54 @@ class FitnessPost(BasePost):
         related_name='posts',
         verbose_name='Treino'
     )
+<<<<<<< HEAD
 
     class Meta:
         verbose_name = 'Post de Fitness'
         verbose_name_plural = 'Posts de Fitness'
+=======
+    likes = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='liked_posts',
+        blank=True,
+        verbose_name='Curtidas'
+    )
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    updated_at = models.DateTimeField('Atualizado em', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Post'
+        verbose_name_plural = 'Posts'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Post de {self.author.get_full_name()} em {self.created_at.strftime('%d/%m/%Y')}"
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='Post'
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='Usuário'
+    )
+    content = models.TextField('Conteúdo')
+    created_at = models.DateTimeField('Criado em', auto_now_add=True)
+    updated_at = models.DateTimeField('Atualizado em', auto_now=True)
+
+    class Meta:
+        verbose_name = 'Comentário'
+        verbose_name_plural = 'Comentários'
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"Comentário de {self.user.get_full_name()} em {self.created_at.strftime('%d/%m/%Y')}"
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
 
 class Achievement(models.Model):
     name = models.CharField('Nome', max_length=100)
@@ -164,6 +261,7 @@ class Achievement(models.Model):
         ordering = ['name']
 
     def __str__(self):
+<<<<<<< HEAD
         return str(self.name)
 
     def clean(self):
@@ -171,6 +269,11 @@ class Achievement(models.Model):
             raise ValidationError('A pontuação não pode ser negativa.')
 
 class UserAchievement(TimestampedModel):
+=======
+        return self.name
+
+class UserAchievement(models.Model):
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -183,13 +286,18 @@ class UserAchievement(TimestampedModel):
         related_name='users',
         verbose_name='Conquista'
     )
+<<<<<<< HEAD
     created_at = models.DateTimeField('Conquistado em', default=timezone.now)
     updated_at = models.DateTimeField('Atualizado em', auto_now=True)
+=======
+    achieved_at = models.DateTimeField('Conquistado em', auto_now_add=True)
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
 
     class Meta:
         verbose_name = 'Conquista do Usuário'
         verbose_name_plural = 'Conquistas do Usuário'
         unique_together = ['user', 'achievement']
+<<<<<<< HEAD
         ordering = ['-created_at']
 
     def __str__(self):
@@ -203,3 +311,9 @@ class UserAchievement(TimestampedModel):
             ).exists()
             if existing:
                 raise ValidationError('O usuário já possui esta conquista.')
+=======
+        ordering = ['-achieved_at']
+
+    def __str__(self):
+        return f"{self.user.get_full_name()} - {self.achievement.name}"
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f

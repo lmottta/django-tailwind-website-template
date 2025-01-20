@@ -1,4 +1,5 @@
 from django.contrib import admin
+<<<<<<< HEAD
 from .models import Post, Comment, PollOption
 
 @admin.register(Post)
@@ -20,3 +21,7 @@ class PollOptionAdmin(admin.ModelAdmin):
     list_display = ('text', 'post', 'votes_count')
     search_fields = ('text', 'post__content')
     readonly_fields = ('votes_count',)
+=======
+
+# Register your models here.
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f

@@ -7,7 +7,11 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 from .models import CustomUser, Anamnesis, UserFollowing, UserBlock, Post, PostImage, Comment
+<<<<<<< HEAD
 from .forms import CustomUserCreationForm, CustomUserChangeForm, AnamnesisForm, UserUpdateForm, UserPreferencesForm, UserPrivacyForm, UserNotificationsForm
+=======
+from .forms import CustomUserCreationForm, CustomUserChangeForm, AnamnesisForm, UserUpdateForm
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
 
 class CustomLoginView(LoginView):
     template_name = 'users/login.html'
@@ -45,7 +49,11 @@ def register(request):
             # Especificando o backend de autenticação
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, 'Registro realizado com sucesso!')
+<<<<<<< HEAD
             return redirect('users:anamnesis_create')
+=======
+            return redirect('anamnesis_create')
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
@@ -266,6 +274,7 @@ def comment_post(request, post_id):
         else:
             messages.error(request, 'O comentário não pode estar vazio.')
     return redirect('home')
+<<<<<<< HEAD
 
 @login_required
 def profile_edit(request):
@@ -326,3 +335,5 @@ def notifications(request):
     return render(request, 'users/notifications.html', {
         'form': form
     })
+=======
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f

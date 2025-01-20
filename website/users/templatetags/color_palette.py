@@ -82,6 +82,7 @@ def get_button_class(user, outline=False):
     if outline:
         return f'{base_classes} btn-outline {colors["button_outline"]} hover:text-white'
     return f'{base_classes} {colors["button"]} text-white'
+<<<<<<< HEAD
 
 @register.simple_tag(takes_context=True)
 def user_color_theme(context):
@@ -89,3 +90,5 @@ def user_color_theme(context):
     if request.user.is_authenticated:
         return request.user.color_palette
     return 'default'
+=======
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f

@@ -19,14 +19,25 @@ class CustomUser(AbstractUser):
         ('admin', 'Admin'),
     )
     
+<<<<<<< HEAD
     COLOR_PALETTES = [
         ('forest', 'Floresta'),
         ('sunset', 'Pôr do Sol'),
         ('royal', 'Real'),
+=======
+    COLOR_PALETTE_CHOICES = [
+        ('default', 'Padrão - Azul Energia'),
+        ('nature', 'Verde Natureza'),
+        ('sunset', 'Pôr do Sol'),
+        ('ocean', 'Oceano Profundo'),
+        ('berry', 'Frutas Silvestres'),
+        ('monochrome', 'Monocromático'),
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
     ]
     
     email = models.EmailField(_('email address'), unique=True)
     user_type = models.CharField('Tipo de Usuário', max_length=10, choices=USER_TYPE_CHOICES, default='student')
+<<<<<<< HEAD
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
     bio = models.TextField(max_length=500, blank=True)
     birth_date = models.DateField('Data de Nascimento', null=True, blank=True)
@@ -40,6 +51,16 @@ class CustomUser(AbstractUser):
     
     # Configurações de Notificação
     email_notifications = models.BooleanField(default=True)
+=======
+    profile_picture = models.ImageField('Foto de Perfil', upload_to=profile_picture_path, max_length=255, null=True, blank=True)
+    bio = models.TextField('Biografia', max_length=500, blank=True)
+    birth_date = models.DateField('Data de Nascimento', null=True, blank=True)
+    fitness_goals = models.TextField('Objetivos Fitness', max_length=500, blank=True)
+    color_palette = models.CharField('Paleta de Cores', max_length=20, choices=COLOR_PALETTE_CHOICES, default='default')
+    
+    # Configurações de Notificação
+    email_notifications = models.BooleanField('Notificações por E-mail', default=True)
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
     follower_notifications = models.BooleanField('Notificações de Seguidores', default=True)
     workout_notifications = models.BooleanField('Notificações de Treinos', default=True)
     login_notifications = models.BooleanField('Notificações de Login', default=True)

@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
+<<<<<<< HEAD
 from posts.views import HomeView
 
 urlpatterns = [
@@ -34,3 +35,19 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+=======
+from django.shortcuts import redirect
+from posts.views import HomeView
+
+def redirect_to_login(request):
+    return redirect('login')
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', redirect_to_login, name='root'),  # Redireciona a raiz para o login
+    path('home/', login_required(HomeView.as_view()), name='home'),
+    path('users/', include('users.urls')),
+    path('fitness/', include('fitness.urls')),
+    path('posts/', include('posts.urls', namespace='posts')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f

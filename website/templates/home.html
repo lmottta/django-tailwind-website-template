@@ -3,6 +3,7 @@
 {% load color_palette %}
 
 {% block authenticated_content %}
+<<<<<<< HEAD
 <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Criar Post -->
     <div class="mb-6">
@@ -12,11 +13,24 @@
                     <div class="w-12 h-12 rounded-full ring ring-1 {% get_palette_color user 'border' %} ring-offset-base-100 ring-offset-2">
                         {% if user.profile_picture %}
                             <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}">
+=======
+<div class="grid grid-cols-12 gap-6">
+    <!-- Feed Principal -->
+    <div class="col-span-8">
+        <!-- Área de Criação de Post -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6">
+            <div class="flex gap-4">
+                <div class="avatar">
+                    <div class="w-10 h-10 rounded-full ring ring-1 ring-offset-base-100 ring-offset-2">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="Profile">
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
                         {% else %}
                             <img src="{% static 'images/default_profile.png' %}" alt="Default Profile">
                         {% endif %}
                     </div>
                 </div>
+<<<<<<< HEAD
                 <div class="flex-grow">
                     <div class="flex space-x-4">
                         <button onclick="openModal('image-modal')" class="btn btn-ghost btn-sm {% get_palette_color user 'text' %} hover:{% get_palette_color user 'text' %}/80 gap-2">
@@ -157,4 +171,119 @@
 
 {% include 'posts/modals/image_modal.html' %}
 {% include 'posts/modals/poll_modal.html' %}
+=======
+                <button onclick="document.getElementById('post-modal').showModal()" 
+                    class="flex-grow text-left px-4 py-2 bg-base-200 hover:bg-base-300 rounded-full text-base-content/70">
+                    No que você está pensando, {{ user.first_name|default:user.username }}?
+                </button>
+            </div>
+            
+            <div class="flex gap-2 mt-4 justify-end">
+                <button onclick="document.getElementById('poll-modal').showModal()" 
+                    class="btn btn-ghost gap-2 hover:bg-base-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                    Enquete
+                </button>
+                <button onclick="document.getElementById('image-modal').showModal()" 
+                    class="btn btn-ghost gap-2 hover:bg-base-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Foto
+                </button>
+            </div>
+        </div>
+
+        <!-- Lista de Posts -->
+        <div class="space-y-6">
+            {% for post in posts %}
+                {% include 'posts/post.html' with post=post %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Barra Lateral Direita -->
+    <div class="col-span-4 space-y-6">
+        <!-- Adicionar Treinos -->
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="font-bold text-lg mb-4">Adicionar Treinos</h3>
+            <div class="space-y-2">
+                <button class="btn btn-block bg-gradient-to-r {% get_gradient user 'to-r' %} text-white border-none">
+                    Criar Novo Treino
+                </button>
+                <button class="btn btn-block btn-outline hover:bg-gradient-to-r {% get_gradient user 'to-r' %} text-white hover:text-white">
+                    Ver Meus Treinos
+                </button>
+            </div>
+        </div>
+
+        <!-- Conquistas -->
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="font-bold text-lg mb-4">Minhas Conquistas</h3>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r {% get_gradient user 'to-r' %} flex items-center justify-center text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <span class="text-sm mt-2">30 dias</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r {% get_gradient user 'to-r' %} flex items-center justify-center text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <span class="text-sm mt-2">Força</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-r {% get_gradient user 'to-r' %} flex items-center justify-center text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <span class="text-sm mt-2">Metas</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sugestões -->
+        <div class="bg-white rounded-lg shadow p-4">
+            <h3 class="font-bold text-lg mb-4">Sugestões para Seguir</h3>
+            <div class="space-y-4">
+                {% for suggestion in suggestions %}
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="avatar">
+                            <div class="w-10 h-10 rounded-full">
+                                {% if suggestion.profile_picture %}
+                                    <img src="{{ suggestion.profile_picture.url }}" alt="Profile">
+                                {% else %}
+                                    <img src="{% static 'images/default_profile.png' %}" alt="Default Profile">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div>
+                            <p class="font-medium">{{ suggestion.get_full_name|default:suggestion.username }}</p>
+                            <p class="text-sm text-base-content/60">@{{ suggestion.username }}</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm bg-gradient-to-r {% get_gradient suggestion 'to-r' %} text-white border-none">
+                        Seguir
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modais -->
+{% include 'posts/modals/post_modal.html' %}
+{% include 'posts/modals/poll_modal.html' %}
+{% include 'posts/modals/image_modal.html' %}
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
 {% endblock %}

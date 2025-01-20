@@ -50,7 +50,10 @@ INSTALLED_APPS = [
     'crispy_tailwind',
     
     # Local Apps
+<<<<<<< HEAD
     'core',
+=======
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
     'users',
     'fitness',
     'posts',
@@ -135,8 +138,13 @@ LOCALE_PATHS = [
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
+<<<<<<< HEAD
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
@@ -144,6 +152,10 @@ STATICFILES_DIRS = [
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = 'media/'
+=======
+# Media files
+MEDIA_URL = '/media/'
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
@@ -160,9 +172,15 @@ NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 # Authentication settings
 AUTH_USER_MODEL = 'users.CustomUser'
+<<<<<<< HEAD
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'users:login'
+=======
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
+>>>>>>> 1bc9d9e56d8d9d501d44190eefe542470fb6ea9f
 
 # Django Allauth configuration
 SITE_ID = 1
